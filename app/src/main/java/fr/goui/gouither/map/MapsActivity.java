@@ -1,12 +1,9 @@
 package fr.goui.gouither.map;
 
-import android.Manifest;
 import android.content.Context;
-import android.location.Location;
-import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -17,9 +14,17 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import fr.goui.gouither.R;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+/**
+ * Displays the Google maps V2 view.
+ */
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, IMapsView {
 
     private GoogleMap mMap;
+
+    /**
+     * Associated presenter.
+     */
+    private IMapsPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +34,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        // creating the presenter
+        mPresenter = new MapsPresenter();
+        mPresenter.attachView(this);
     }
 
 
@@ -55,5 +63,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void addMarkerAndMove(LatLng position, String message) {
         mMap.addMarker(new MarkerOptions().position(position).title(message));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public void showProgressBar() {
+        // TODO show progress bar
+    }
+
+    @Override
+    public void hideProgressBar() {
+        // TODO hide progress bar
+    }
+
+    @Override
+    public void showMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }
