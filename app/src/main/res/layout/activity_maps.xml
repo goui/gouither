@@ -1,8 +1,42 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/map"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="fr.goui.gouither.map.MapsActivity" />
+    android:orientation="vertical">
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        tools:context="fr.goui.gouither.map.MapsActivity" />
+
+    <RelativeLayout
+        android:id="@+id/forecast_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="4dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Weather forecast" />
+
+        <TextView
+            android:id="@+id/forecast_close_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:paddingBottom="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="6dp"
+            android:text="x" />
+    </RelativeLayout>
+</LinearLayout>

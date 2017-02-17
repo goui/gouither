@@ -3,6 +3,8 @@ package fr.goui.gouither.map;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -10,14 +12,18 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import fr.goui.gouither.R;
 
 /**
  * Displays the Google maps V2 view.
  */
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, IMapsView {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, IMapsView {
 
     private GoogleMap mMap;
 
@@ -26,10 +32,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     private IMapsPresenter mPresenter;
 
+    @BindView(R.id.forecast_layout)
+    RelativeLayout mForecastLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        ButterKnife.bind(this);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -52,6 +62,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setOnMarkerClickListener(this);
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.getUiSettings().setZoomControlsEnabled(false);
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -63,6 +76,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void addMarkerAndMove(LatLng position, String message) {
         mMap.addMarker(new MarkerOptions().position(position).title(message));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        mForecastLayout.setVisibility(View.VISIBLE);
+        return false;
+    }
+
+    @OnClick(R.id.forecast_close_button)
+    public void onCloseForecastClick() {
+        mForecastLayout.setVisibility(View.GONE);
     }
 
     @Override
