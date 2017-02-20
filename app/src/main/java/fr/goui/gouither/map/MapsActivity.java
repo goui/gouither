@@ -3,6 +3,8 @@ package fr.goui.gouither.map;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -11,18 +13,16 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.goui.gouither.R;
-import fr.goui.gouither.model.WeatherResult;
 
 /**
  * Displays the Google maps V2 view.
  */
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, IMapsView {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, IMapsView {
 
     private GoogleMap mMap;
 
@@ -33,6 +33,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @BindView(R.id.forecast_preview_text_view)
     TextView mForecastPreviewTextView;
+
+    @BindView(R.id.forecast_progress_bar)
+    ProgressBar mProgressBar;
+
+    @BindView(R.id.forecast_temperature_text_view)
+    TextView mTemperatureTextView;
+
+    @BindView(R.id.forecast_humidity_text_view)
+    TextView mHumidityTextView;
+
+    @BindView(R.id.forecast_precipitation_probability_text_view)
+    TextView mPrecipitationTextView;
+
+    @BindView(R.id.forecast_wind_speed_text_view)
+    TextView mWindSpeedTextView;
+
+    @BindView(R.id.forecast_cloud_cover_text_view)
+    TextView mCloudCoverTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,27 +79,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setOnMarkerClickListener(this);
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.getUiSettings().setZoomControlsEnabled(false);
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                // TODO clear all markers, add a new one and move to it
-                addMarkerAndMove(latLng, "You clicked here!");
+                mPresenter.onMapClick(latLng);
             }
         });
     }
 
-    private void addMarkerAndMove(LatLng position, String message) {
-        mMap.addMarker(new MarkerOptions().position(position).title(message));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
+    @Override
+    public void clearMarkers() {
+        mMap.clear();
     }
 
     @Override
-    public boolean onMarkerClick(Marker marker) {
-        // TODO ask presenter to load information about location
-        return false;
+    public void addMarker(LatLng latLng) {
+        mMap.addMarker(new MarkerOptions().position(latLng).title(latLng.latitude + ", " + latLng.longitude));
+    }
+
+    @Override
+    public void moveCameraTo(LatLng latLng) {
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
     }
 
     @Override
@@ -91,12 +111,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void showProgressBar() {
-        // TODO show progress bar
+        mProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgressBar() {
-        // TODO hide progress bar
+        mProgressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -105,7 +125,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void showResult(WeatherResult result) {
-        // TODO fill in information
+    public void hidePreviewText() {
+        mForecastPreviewTextView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setTemperature(int temperature) {
+        mTemperatureTextView.setText(String.format(getString(R.string.deg_celcius_placeholder), temperature));
+    }
+
+    @Override
+    public void setHumidity(int humidity) {
+        mHumidityTextView.setText(String.format(getString(R.string.percentage_placeholder), humidity));
+    }
+
+    @Override
+    public void setPrecipitationProbability(int precipitationProbability) {
+        mPrecipitationTextView.setText(String.format(getString(R.string.percentage_placeholder), precipitationProbability));
+    }
+
+    @Override
+    public void setWindSpeed(float windSpeed) {
+        mWindSpeedTextView.setText(String.format(getString(R.string.km_h_placeholder), windSpeed));
+    }
+
+    @Override
+    public void setCloudCover(int cloudCover) {
+        mCloudCoverTextView.setText(String.format(getString(R.string.percentage_placeholder), cloudCover));
     }
 }

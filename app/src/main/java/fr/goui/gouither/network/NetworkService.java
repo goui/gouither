@@ -21,11 +21,11 @@ public interface NetworkService {
      *
      * @see <a href="https://darksky.net/dev/">https://darksky.net/dev/</a>
      */
-    String API_KEY = "";
+    String API_KEY = "1161e3c9c1b0ecd9cf4686eed9ef18b8/";
 
     String URL = "https://api.darksky.net/forecast/" + API_KEY;
 
-    @GET("/{latitude},{longitude}")
+    @GET("{latitude},{longitude}?units=si")
     Observable<WeatherResult> getForecast(@Path("latitude") String latitude, @Path("longitude") String longitude);
 
     class Factory {

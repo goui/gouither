@@ -1,5 +1,7 @@
 package fr.goui.gouither.map;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import fr.goui.gouither.GouitherApplication;
 import fr.goui.gouither.model.WeatherResult;
 import fr.goui.gouither.network.NetworkService;
@@ -39,20 +41,33 @@ class MapsPresenter implements IMapsPresenter {
     }
 
     @Override
-    public void loadForecast(double latitude, double longitude) {
+    public void onMapClick(LatLng latLng) {
+        mView.clearMarkers();
+        mView.addMarker(latLng);
+        mView.moveCameraTo(latLng);
+        loadForecast(latLng);
+    }
+
+    /**
+     * Loads forecast from backend.
+     *
+     * @param latLng the forecast location
+     */
+    private void loadForecast(LatLng latLng) {
+        mView.hidePreviewText();
         mView.showProgressBar();
         if (mSubscription != null) {
             mSubscription.unsubscribe();
         }
         GouitherApplication application = GouitherApplication.get(mView.getContext());
         NetworkService service = application.getNetworkService();
-        mSubscription = service.getForecast(String.valueOf(latitude), String.valueOf(longitude))
+        mSubscription = service.getForecast(String.valueOf(latLng.latitude), String.valueOf(latLng.longitude))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Subscriber<WeatherResult>() {
                     @Override
                     public void onCompleted() {
-                        // TODO show result in forecast layout
+                        showResult();
                         mView.hideProgressBar();
                     }
 
@@ -67,5 +82,16 @@ class MapsPresenter implements IMapsPresenter {
                         mWeatherResult = result;
                     }
                 });
+    }
+
+    /**
+     * Shows the forecast result in the view.
+     */
+    private void showResult() {
+        mView.setTemperature((int) mWeatherResult.getCurrently().getTemperature());
+        mView.setHumidity((int) (mWeatherResult.getCurrently().getHumidity() * 100));
+        mView.setPrecipitationProbability((int) (mWeatherResult.getCurrently().getPrecipProbability() * 100));
+        mView.setWindSpeed(mWeatherResult.getCurrently().getWindSpeed());
+        mView.setCloudCover((int) (mWeatherResult.getCurrently().getCloudCover() * 100));
     }
 }

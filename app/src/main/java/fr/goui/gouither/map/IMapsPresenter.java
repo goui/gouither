@@ -1,5 +1,7 @@
 package fr.goui.gouither.map;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import fr.goui.gouither.IPresenter;
 
 /**
@@ -8,10 +10,9 @@ import fr.goui.gouither.IPresenter;
 interface IMapsPresenter extends IPresenter<IMapsView> {
 
     /**
-     * Gets forecast information from web api.
+     * When map is clicked.
      *
-     * @param latitude  lat
-     * @param longitude lng
+     * @param latLng the click location
      */
-    void loadForecast(double latitude, double longitude);
+    void onMapClick(LatLng latLng);
 }

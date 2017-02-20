@@ -8,4 +8,7 @@
     <string name="Wind_speed">Wind speed</string>
     <string name="Cloud_cover">Cloud cover</string>
     <string name="forecast_preview">Tap anywhere on the map to know the weather there.</string>
+    <string name="deg_celcius_placeholder">%1$d°C</string>
+    <string name="percentage_placeholder">%1$d%%</string>
+    <string name="km_h_placeholder">%1$.2f km/h</string>
 </resources>
