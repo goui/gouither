@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +37,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @BindView(R.id.forecast_progress_bar)
     ProgressBar mProgressBar;
+
+    @BindView(R.id.forecast_icon)
+    ImageView mForecastImageView;
 
     @BindView(R.id.forecast_temperature_text_view)
     TextView mTemperatureTextView;
@@ -127,6 +131,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void hidePreviewText() {
         mForecastPreviewTextView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setIcon(String iconId) {
+        mForecastImageView.setImageResource(getResources().getIdentifier(iconId, "drawable", getPackageName()));
     }
 
     @Override

@@ -88,6 +88,7 @@ class MapsPresenter implements IMapsPresenter {
      * Shows the forecast result in the view.
      */
     private void showResult() {
+        mView.setIcon(mWeatherResult.getCurrently().getIcon().replace("-", "_"));
         mView.setTemperature((int) mWeatherResult.getCurrently().getTemperature());
         mView.setHumidity((int) (mWeatherResult.getCurrently().getHumidity() * 100));
         mView.setPrecipitationProbability((int) (mWeatherResult.getCurrently().getPrecipProbability() * 100));

@@ -33,6 +33,13 @@ interface IMapsView extends IView {
     void hidePreviewText();
 
     /**
+     * Shows the forecast icon.
+     *
+     * @param iconId the icon id
+     */
+    void setIcon(String iconId);
+
+    /**
      * Shows the temperature.
      *
      * @param temperature the temperature
