@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Gouither</string>
     <string name="title_activity_maps">Map</string>
+    <string name="Weather_forecast">Weather forecast</string>
+    <string name="Temperature">Temperature</string>
+    <string name="Humidity">Humidity</string>
+    <string name="Precipitation_probability">Precipitation probability</string>
+    <string name="Wind_speed">Wind speed</string>
+    <string name="Cloud_cover">Cloud cover</string>
+    <string name="forecast_preview">Tap anywhere on the map to know the weather there.</string>
 </resources>

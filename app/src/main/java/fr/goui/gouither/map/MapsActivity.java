@@ -3,8 +3,7 @@ package fr.goui.gouither.map;
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -17,8 +16,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import fr.goui.gouither.R;
+import fr.goui.gouither.model.WeatherResult;
 
 /**
  * Displays the Google maps V2 view.
@@ -32,8 +31,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     private IMapsPresenter mPresenter;
 
-    @BindView(R.id.forecast_layout)
-    RelativeLayout mForecastLayout;
+    @BindView(R.id.forecast_preview_text_view)
+    TextView mForecastPreviewTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +67,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
+                // TODO clear all markers, add a new one and move to it
                 addMarkerAndMove(latLng, "You clicked here!");
             }
         });
@@ -80,13 +80,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        mForecastLayout.setVisibility(View.VISIBLE);
+        // TODO ask presenter to load information about location
         return false;
-    }
-
-    @OnClick(R.id.forecast_close_button)
-    public void onCloseForecastClick() {
-        mForecastLayout.setVisibility(View.GONE);
     }
 
     @Override
@@ -107,5 +102,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void showMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showResult(WeatherResult result) {
+        // TODO fill in information
     }
 }
